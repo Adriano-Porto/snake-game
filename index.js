@@ -3,12 +3,16 @@ import player from './player.js'
 class Grid {
     constructor(width, height) {
         this.grid = document.querySelector('tbody')
+        this.color1 = "rgb(100,255,180)"
+        this.color2 = "rgb(20,255, 60)"
+
         this.width = width
         this.height = height
 
         this.makeGrid()
-        this.frameUpdate.bind(this)
+        this.frameUpdate()
     }
+
     makeHTMLGrid() {
         let str = ''
         for(let i = 0; i < this.height; i++) {
@@ -31,15 +35,15 @@ class Grid {
             for(let j = 0; j < this.width; j++) {
                 if(i % 2 === 0 ) {
                     if ( j % 2 === 0 ){
-                        this.grid.rows[i].childNodes[j].style.backgroundColor = 'blue'
+                        this.grid.rows[i].childNodes[j].style.backgroundColor = this.color1
                     } else if ( j % 2 === 1){
-                        this.grid.rows[i].childNodes[j].style.backgroundColor = 'green'
+                        this.grid.rows[i].childNodes[j].style.backgroundColor = this.color2
                     }
                 } else {
                     if ( j % 2 === 0 ){
-                        this.grid.rows[i].childNodes[j].style.backgroundColor = 'green'
+                        this.grid.rows[i].childNodes[j].style.backgroundColor = this.color2
                     } else if ( j % 2 === 1){
-                        this.grid.rows[i].childNodes[j].style.backgroundColor = 'blue'
+                        this.grid.rows[i].childNodes[j].style.backgroundColor = this.color1
                     }
                 }
             }
@@ -60,4 +64,8 @@ class Grid {
 }
 
 const grid = new Grid(12, 12)
-requestAnimationFrame(() => grid.frameUpdate())
+
+const refreshGame = setInterval(()=>{
+    player.move();
+    grid.frameUpdate()
+}, 2000)

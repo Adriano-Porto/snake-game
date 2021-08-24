@@ -20,6 +20,6 @@ body {
 td {
     height: 1.8rem;
     width: 1.8rem;
-    padding: 1px;
+    /* padding: 1px; */
     background-color: blue;
 }
