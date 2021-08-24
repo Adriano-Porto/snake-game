@@ -3,46 +3,52 @@ const settings = {
     height: 5
 }
 
-const grid = document.querySelector('.grid')
-addGrid()
-const tbody = document.querySelector('tbody')
+class Grid {
+    constructor(width, height) {
+        this.grid = document.querySelector('tbody')
+        this.width = width
+        this.height = height
 
-function makeGrid() {
-    let str = ''
-    for(let i = 0; i < settings.height; i++) {
-        str += `<tr class = '${i}'>`
-        for(let j = 0; j < settings.width; j++) {
-            str += `<td class = '${i},${j}'></td>`
-        }
-        str+= `</tr>`
+        this.makeGrid()
+        console.log(this.grid)
+        this.paintGrid()
     }
-    return str
-}
+    makeHTMLGrid() {
+        let str = ''
+        for(let i = 0; i < settings.height; i++) {
+            str += `<tr class = '${i}'>`
+            for(let j = 0; j < settings.width; j++) {
+                str += `<td class = '${i},${j}'></td>`
+            }
+            str+= `</tr>`
+        }
+        return str
+    }
 
-function addGrid() {
-    const str = makeGrid()
-    grid.innerHTML += str
-}
+    makeGrid() {
+        const str = this.makeHTMLGrid()
+        this.grid.innerHTML += str
+    }
 
-function paintGrid() {
-    for(let i = 0; i < settings.height; i++) {
-        for(let j = 0; j < settings.width; j++) {
-            if(i % 2 === 0 ) {
-                if ( j % 2 === 0 ){
-                    tbody.rows[i].childNodes[j].style.backgroundColor = 'blue'
-                } else if ( j % 2 === 1){
-                    tbody.rows[i].childNodes[j].style.backgroundColor = 'green'
-                }
-            } else {
-                if ( j % 2 === 0 ){
-                    tbody.rows[i].childNodes[j].style.backgroundColor = 'green'
-                } else if ( j % 2 === 1){
-                    tbody.rows[i].childNodes[j].style.backgroundColor = 'blue'
+    paintGrid() {
+        for(let i = 0; i < settings.height; i++) {
+            for(let j = 0; j < settings.width; j++) {
+                if(i % 2 === 0 ) {
+                    if ( j % 2 === 0 ){
+                        this.grid.rows[i].childNodes[j].style.backgroundColor = 'blue'
+                    } else if ( j % 2 === 1){
+                        this.grid.rows[i].childNodes[j].style.backgroundColor = 'green'
+                    }
+                } else {
+                    if ( j % 2 === 0 ){
+                        this.grid.rows[i].childNodes[j].style.backgroundColor = 'green'
+                    } else if ( j % 2 === 1){
+                        this.grid.rows[i].childNodes[j].style.backgroundColor = 'blue'
+                    }
                 }
             }
         }
     }
 }
-paintGrid()
-// grid.rows[y].childNodes[x].style.backgroundColor = color
-console.log()
+
+const grid = new Grid()
