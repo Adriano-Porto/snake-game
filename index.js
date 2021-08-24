@@ -1,7 +1,4 @@
-const settings = {
-    width: 4,
-    height: 5
-}
+import player from './player.js'
 
 class Grid {
     constructor(width, height) {
@@ -10,14 +7,13 @@ class Grid {
         this.height = height
 
         this.makeGrid()
-        console.log(this.grid)
-        this.paintGrid()
+        this.frameUpdate.bind(this)
     }
     makeHTMLGrid() {
         let str = ''
-        for(let i = 0; i < settings.height; i++) {
+        for(let i = 0; i < this.height; i++) {
             str += `<tr class = '${i}'>`
-            for(let j = 0; j < settings.width; j++) {
+            for(let j = 0; j < this.width; j++) {
                 str += `<td class = '${i},${j}'></td>`
             }
             str+= `</tr>`
@@ -30,9 +26,9 @@ class Grid {
         this.grid.innerHTML += str
     }
 
-    paintGrid() {
-        for(let i = 0; i < settings.height; i++) {
-            for(let j = 0; j < settings.width; j++) {
+    clear() {
+        for(let i = 0; i < this.height; i++) {
+            for(let j = 0; j < this.width; j++) {
                 if(i % 2 === 0 ) {
                     if ( j % 2 === 0 ){
                         this.grid.rows[i].childNodes[j].style.backgroundColor = 'blue'
@@ -49,6 +45,19 @@ class Grid {
             }
         }
     }
+
+    render() {
+        player.positions.forEach(({x, y})=>{
+            this.grid.rows[y].childNodes[x].style.backgroundColor = 'red'
+        })
+    }
+
+    frameUpdate() {
+        // console.log(this)
+        this.clear()
+        this.render()
+    }
 }
 
-const grid = new Grid()
+const grid = new Grid(12, 12)
+requestAnimationFrame(() => grid.frameUpdate())
