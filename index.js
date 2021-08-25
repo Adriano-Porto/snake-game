@@ -66,6 +66,17 @@ class Grid {
 const grid = new Grid(12, 12)
 
 const refreshGame = setInterval(()=>{
-    player.move();
-    grid.frameUpdate()
+    try{
+        player.move();
+        grid.frameUpdate()
+    } catch (err) {
+        console.log(err)
+    }
+    
 }, 2000)
+
+document.addEventListener('keydown', ({keyCode}) => {
+    player.changeDirection(keyCode)
+})
+
+// 
