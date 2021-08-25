@@ -1,4 +1,5 @@
 import player from './player.js'
+import Fruit from './fruit.js'
 
 class Grid {
     constructor(width, height) {
@@ -8,6 +9,8 @@ class Grid {
 
         this.width = width
         this.height = height
+
+        this.fruits = [new Fruit(4, 5)]
 
         this.makeGrid()
         this.frameUpdate()
@@ -54,6 +57,10 @@ class Grid {
         player.positions.forEach(({x, y})=>{
             this.grid.rows[y].childNodes[x].style.backgroundColor = 'red'
         })
+
+        this.fruits.forEach(({x, y})=> {
+            this.grid.rows[y].childNodes[x].style.backgroundColor = 'blue'
+        })
     }
 
     frameUpdate() {
@@ -61,22 +68,57 @@ class Grid {
         this.clear()
         this.render()
     }
+
+    createFruit() {
+        const availableSpaces = []
+
+        for(let i = 0; i < this.width; i++) { 
+            for(let j = 0; j < this.height; j++) {
+                let skip = false
+                for( let l = 0; l < player.positions.length; l++) {
+                    const x = player.positions[l].x
+                    const y = player.positions[l].y
+                    if(i === x && j === y) {
+                        skip = true
+                        break;
+                    }
+                }
+
+                for( let f = 0; f < this.fruits.length; f++) {
+                    const x = this.fruits[f].x
+                    const y = this.fruits[f].y
+                    if(i === x && j === y) {
+                        skip = true
+
+                    }
+                }
+                    if(skip) {
+                        continue
+                    }
+                    availableSpaces.push({x:i, y: j})
+                }
+            }
+        const rndIndex = Math.floor(Math.random() * availableSpaces.length)
+        console.log(this.fruits)
+        this.fruits.push(new Fruit(availableSpaces[rndIndex].x , availableSpaces[rndIndex].y))
+    
+    }
 }
 
 const grid = new Grid(12, 12)
 
 const refreshGame = setInterval(()=>{
-    try{
+    // try{
         player.move();
         grid.frameUpdate()
-    } catch (err) {
-        console.log(err)
-    }
+        grid.createFruit()
+    // } catch (err) {
+    //     console.log(err)
+    // }
     
-}, 2000)
+}, 200)
 
 document.addEventListener('keydown', ({keyCode}) => {
     player.changeDirection(keyCode)
 })
 
-// 

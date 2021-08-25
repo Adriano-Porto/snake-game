@@ -45,8 +45,6 @@ class Player {
         }  else {
             this.direction = 'down'
         }
-
-        console.log(this.direction)
     }
 }
 
