@@ -54,6 +54,7 @@ class Grid {
     }
 
     render() {
+        this.clear()
         this.fruits.forEach(({x, y})=> {
             this.grid.rows[y].childNodes[x].style.backgroundColor = 'blue'
         })
@@ -65,7 +66,6 @@ class Grid {
 
     frameUpdate() {
         player.move()
-        this.clear()
         this.isPlayerAlive()
         this.render()
     }
@@ -120,6 +120,15 @@ class Grid {
             if(headPos.x === pos.x && headPos.y === pos.y) {
                 this.endGame()
             }
+        }
+
+        if(
+            headPos.x < 0  ||
+            headPos.y < 0  ||
+            headPos.x > this.width-1 ||
+            headPos.y > this.height-1
+            ) {
+            this.endGame()
         }
     }
 
