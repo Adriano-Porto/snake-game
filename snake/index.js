@@ -54,18 +54,19 @@ class Grid {
     }
 
     render() {
-        player.positions.forEach(({x, y})=>{
-            this.grid.rows[y].childNodes[x].style.backgroundColor = 'red'
-        })
-
         this.fruits.forEach(({x, y})=> {
             this.grid.rows[y].childNodes[x].style.backgroundColor = 'blue'
+        })
+
+        player.positions.forEach(({x, y})=>{
+            this.grid.rows[y].childNodes[x].style.backgroundColor = 'red'
         })
     }
 
     frameUpdate() {
-        // console.log(this)
+        player.move()
         this.clear()
+        this.isPlayerAlive()
         this.render()
     }
 
@@ -117,9 +118,16 @@ class Grid {
         for(let i = 1; i < player.positions.length; i++) {
             let pos = player.positions[i]
             if(headPos.x === pos.x && headPos.y === pos.y) {
-                grid.endGame()
+                this.endGame()
             }
         }
+    }
+
+    handleKeyPress({keyCode}) {
+        if(keyCode === 27) {
+            grid.stopGame()
+        }
+        player.changeDirection(keyCode)
     }
 }
 
@@ -127,19 +135,11 @@ const grid = new Grid(12, 12)
 
 const refreshGame = setInterval(()=>{
     try{
-        player.move();
         grid.frameUpdate()
-        grid.isPlayerAlive()
     } catch (err) {
         console.log(err)
     }
     
 }, 200)
 
-document.addEventListener('keydown', ({keyCode}) => {
-    if(keyCode === 27) {
-        grid.stopGame()
-    }
-    player.changeDirection(keyCode)
-})
-
+document.addEventListener('keydown', grid.handleKeyPress)
