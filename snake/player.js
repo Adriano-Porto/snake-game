@@ -9,6 +9,7 @@ class Player {
         this.color = 'rgb(200,20, 90)'
         this.direction = 'up' //up left right down
         this.alive = true
+        this.haveMoved = false
     }
 
     move() {
@@ -24,6 +25,7 @@ class Player {
         }
         this.positions.unshift(head) // add head to the front and move the rest backwards
         this.positions.pop()
+        this.haveMoved =  false
     }
 
     changeDirection(keycode) {
@@ -36,15 +38,25 @@ class Player {
             d:              68
             s:              83
         */
-        if(keycode === 37 ||keycode === 65) {
-            this.direction = 'left'
+        if(keycode === 37 || keycode === 65) {
+            if(this.direction !== 'right') {
+                this.direction = 'left'
+            }
+            
         } else if (keycode === 39 || keycode === 68) {
-            this.direction = 'right'
+            if(this.direction !== 'left') {
+                this.direction = 'right'
+            }
         } else if (keycode === 38 || keycode === 87) {
-            this.direction = 'up'
+            if(this.direction !== 'down') {
+                this.direction = 'up'
+            }
         }  else {
-            this.direction = 'down'
+            if(this.direction !== 'up') {
+                this.direction = 'down'
+            }
         }
+        this.haveMoved = true
     }
 }
 

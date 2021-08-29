@@ -59,9 +59,14 @@ class Grid {
             this.grid.rows[y].childNodes[x].style.backgroundColor = 'blue'
         })
 
-        player.positions.forEach(({x, y})=>{
-            this.grid.rows[y].childNodes[x].style.backgroundColor = 'red'
-        })
+        try {
+            player.positions.forEach(({x, y})=>{
+                this.grid.rows[y].childNodes[x].style.backgroundColor = 'red'
+            })
+        } catch (err) {
+            throw new Error("Player Out of Bounce")
+        }
+        
     }
 
     frameUpdate() {
@@ -136,7 +141,10 @@ class Grid {
         if(keyCode === 27) {
             grid.stopGame()
         }
-        player.changeDirection(keyCode)
+        if(!player.haveMoved) {
+            player.changeDirection(keyCode)
+        }
+        
     }
 }
 
