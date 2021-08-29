@@ -103,22 +103,43 @@ class Grid {
         this.fruits.push(new Fruit(availableSpaces[rndIndex].x , availableSpaces[rndIndex].y))
     
     }
+
+    stopGame() {
+        clearInterval(refreshGame)
+    }
+
+    endGame() {
+        clearInterval(refreshGame)
+    }
+
+    isPlayerAlive() {
+        let headPos = player.positions[0]
+        for(let i = 1; i < player.positions.length; i++) {
+            let pos = player.positions[i]
+            if(headPos.x === pos.x && headPos.y === pos.y) {
+                grid.endGame()
+            }
+        }
+    }
 }
 
 const grid = new Grid(12, 12)
 
 const refreshGame = setInterval(()=>{
-    // try{
+    try{
         player.move();
         grid.frameUpdate()
-        grid.createFruit()
-    // } catch (err) {
-    //     console.log(err)
-    // }
+        grid.isPlayerAlive()
+    } catch (err) {
+        console.log(err)
+    }
     
 }, 200)
 
 document.addEventListener('keydown', ({keyCode}) => {
+    if(keyCode === 27) {
+        grid.stopGame()
+    }
     player.changeDirection(keyCode)
 })
 
