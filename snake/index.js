@@ -72,6 +72,7 @@ class Grid {
     frameUpdate() {
         player.move()
         this.isPlayerAlive()
+        this.didPlayerAteFruit()
         this.render()
     }
 
@@ -110,6 +111,10 @@ class Grid {
     
     }
 
+    destroyFruit(fruitInd) {
+        this.fruits.splice(fruitInd, 1)
+    }
+
     stopGame() {
         clearInterval(refreshGame)
     }
@@ -144,7 +149,16 @@ class Grid {
         if(!player.haveMoved) {
             player.changeDirection(keyCode)
         }
-        
+    }
+
+    didPlayerAteFruit() {
+        this.fruits.forEach(( fruit = { }, ind) => {
+            if(fruit.x === player.positions[0].x && fruit.y === player.positions[0].y) {
+                player.increaseSize()
+                this.destroyFruit(ind)
+                this.createFruit()
+            }
+        })
     }
 }
 

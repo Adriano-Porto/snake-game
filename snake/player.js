@@ -10,6 +10,7 @@ class Player {
         this.direction = 'up' //up left right down
         this.alive = true
         this.haveMoved = false
+        this.lastPos = { x: 8, y: 11 }
     }
 
     move() {
@@ -24,7 +25,7 @@ class Player {
             head.x = head.x + 1
         }
         this.positions.unshift(head) // add head to the front and move the rest backwards
-        this.positions.pop()
+        this.lastPos = this.positions.pop()
         this.haveMoved =  false
     }
 
@@ -57,6 +58,10 @@ class Player {
             }
         }
         this.haveMoved = true
+    }
+
+    increaseSize() {
+        this.positions.push(this.lastPos)
     }
 }
 
