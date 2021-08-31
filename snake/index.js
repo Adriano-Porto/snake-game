@@ -1,7 +1,7 @@
 import player from './player.js'
 import Fruit from './fruit.js'
 
-var refreshRate = 200, gridWidth = 10, gridHeight = 250
+var refreshRate = 200, gridWidth = 12, gridHeight = 12
 
 class Grid {
     constructor(width, height) {
