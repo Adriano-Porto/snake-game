@@ -3,14 +3,32 @@ class Grid {
         this.grid = document.querySelector('tbody')
         this.color1 = "rgb(100,255,180)"
         this.color2 = "rgb(20,255, 60)"
+        this.colorFruit = "blue"
+        this.colorPlayer = "red"
 
         this.height = height
         this.width = width
 
-        this.makeGrid()
+        return this
     }
 
-    makeHTMLGrid() {
+    setGridColors(color1, color2) {
+        this.color1 = color1
+        this.color2 = color2
+        return this
+    }
+
+    setPlayerColor(colorPlayer) {
+        this.colorPlayer = colorPlayer
+        return this
+    }
+
+    setFruitColor(fruitColor) {
+        this.colorFruit = fruitColor
+        return this
+    }
+
+    buildHTMLGrid() {
         let str = ''
         for(let i = 0; i < this.height; i++) {
             str += `<tr class = '${i}'>`
@@ -23,8 +41,9 @@ class Grid {
     }
 
     makeGrid() {
-        const str = this.makeHTMLGrid()
+        const str = this.buildHTMLGrid()
         this.grid.innerHTML += str
+        return this
     }
 
     clear() {
@@ -50,12 +69,12 @@ class Grid {
     render(fruits, positions) {
         this.clear()
         fruits.forEach(({x, y})=> {
-            this.grid.rows[y].childNodes[x].style.backgroundColor = 'blue'
+            this.grid.rows[y].childNodes[x].style.backgroundColor = this.colorFruit
         })
 
         
         positions.forEach(({x, y})=>{
-            this.grid.rows[y].childNodes[x].style.backgroundColor = 'red'
+            this.grid.rows[y].childNodes[x].style.backgroundColor = this.colorPlayer
         })
     }
 }

@@ -8,13 +8,25 @@ class Game {
         this.width = 12
         this.height = 12
 
-        this.fruits = [new Fruit(4, 5)]
+        this.fruits = []
+        this.createFruit()
 
         this.grid = new Grid(this.width, this.height)
+            .setGridColors('rgb(255,0,0)', 'rgb(255,0,0)')
+            .setPlayerColor('blue')
+            .setFruitColor('rgb(241,0,0)')
+            .makeGrid()
 
         this.gameInterval = setInterval(() => {
             this.frameUpdate()
         }, 200)
+    }
+
+    frameUpdate() {
+        player.move()
+        this.isPlayerAlive()
+        this.didPlayerAteFruit()
+        this.grid.render(this.fruits, player.positions)
     }
 
     handleKeyPress({keyCode}) {
@@ -78,11 +90,8 @@ class Game {
         this.fruits.push(new Fruit(availableSpaces[rndIndex].x , availableSpaces[rndIndex].y))
     }
 
-    frameUpdate() {
-        player.move()
-        this.isPlayerAlive()
-        this.didPlayerAteFruit()
-        this.grid.render(this.fruits, player.positions)
+    destroyFruit(fruitInd) {
+        this.fruits.splice(fruitInd, 1)
     }
 
     stopGame() {
@@ -102,10 +111,6 @@ class Game {
                 this.createFruit()
             }
         })
-    }
-
-    destroyFruit(fruitInd) {
-        this.fruits.splice(fruitInd, 1)
     }
 }
 
