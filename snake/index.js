@@ -1,6 +1,8 @@
 import player from './player.js'
 import Fruit from './fruit.js'
 
+var refreshRate = 200, gridWidth = 10, gridHeight = 250
+
 class Grid {
     constructor(width, height) {
         this.grid = document.querySelector('tbody')
@@ -162,7 +164,7 @@ class Grid {
     }
 }
 
-const grid = new Grid(12, 12)
+const grid = new Grid(gridWidth, gridHeight)
 
 const refreshGame = setInterval(()=>{
     try{
@@ -171,6 +173,6 @@ const refreshGame = setInterval(()=>{
         console.log(err)
     }
     
-}, 200)
+}, refreshRate)
 
 document.addEventListener('keydown', grid.handleKeyPress)
