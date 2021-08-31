@@ -1,81 +1,48 @@
 import player from './player.js'
 import Fruit from './fruit.js'
+import Grid from './grid.js'
 
-var refreshRate = 200, gridWidth = 12, gridHeight = 12
-
-class Grid {
-    constructor(width, height) {
-        this.grid = document.querySelector('tbody')
-        this.color1 = "rgb(100,255,180)"
-        this.color2 = "rgb(20,255, 60)"
-
-        this.width = width
-        this.height = height
+class Game {
+    constructor() {
+        this.refreshRate = 200
+        this.width = 12
+        this.height = 12
 
         this.fruits = [new Fruit(4, 5)]
 
-        this.makeGrid()
-        this.frameUpdate()
+        this.grid = new Grid(this.width, this.height)
+
+        this.gameInterval = setInterval(() => {
+            this.frameUpdate()
+        }, 200)
     }
 
-    makeHTMLGrid() {
-        let str = ''
-        for(let i = 0; i < this.height; i++) {
-            str += `<tr class = '${i}'>`
-            for(let j = 0; j < this.width; j++) {
-                str += `<td class = '${i},${j}'></td>`
-            }
-            str+= `</tr>`
+    handleKeyPress({keyCode}) {
+        if(keyCode === 27) {
+            this.stopGame()
         }
-        return str
+        if(!player.haveMoved) {
+            player.changeDirection(keyCode)
+        }
     }
 
-    makeGrid() {
-        const str = this.makeHTMLGrid()
-        this.grid.innerHTML += str
-    }
-
-    clear() {
-        for(let i = 0; i < this.height; i++) {
-            for(let j = 0; j < this.width; j++) {
-                if(i % 2 === 0 ) {
-                    if ( j % 2 === 0 ){
-                        this.grid.rows[i].childNodes[j].style.backgroundColor = this.color1
-                    } else if ( j % 2 === 1){
-                        this.grid.rows[i].childNodes[j].style.backgroundColor = this.color2
-                    }
-                } else {
-                    if ( j % 2 === 0 ){
-                        this.grid.rows[i].childNodes[j].style.backgroundColor = this.color2
-                    } else if ( j % 2 === 1){
-                        this.grid.rows[i].childNodes[j].style.backgroundColor = this.color1
-                    }
-                }
+    isPlayerAlive() {
+        let headPos = player.positions[0]
+        for(let i = 1; i < player.positions.length; i++) {
+            let pos = player.positions[i]
+            if(headPos.x === pos.x && headPos.y === pos.y) {
+                this.endGame()
             }
         }
-    }
 
-    render() {
-        this.clear()
-        this.fruits.forEach(({x, y})=> {
-            this.grid.rows[y].childNodes[x].style.backgroundColor = 'blue'
-        })
-
-        try {
-            player.positions.forEach(({x, y})=>{
-                this.grid.rows[y].childNodes[x].style.backgroundColor = 'red'
-            })
-        } catch (err) {
-            throw new Error("Player Out of Bounce")
+        if(
+            headPos.x < 0  ||
+            headPos.y < 0  ||
+            headPos.x > this.width-1 ||
+            headPos.y > this.height-1
+            ) {
+            this.endGame()
         }
-        
-    }
-
-    frameUpdate() {
-        player.move()
-        this.isPlayerAlive()
-        this.didPlayerAteFruit()
-        this.render()
     }
 
     createFruit() {
@@ -108,71 +75,41 @@ class Grid {
                 }
             }
         const rndIndex = Math.floor(Math.random() * availableSpaces.length)
-        console.log(this.fruits)
         this.fruits.push(new Fruit(availableSpaces[rndIndex].x , availableSpaces[rndIndex].y))
-    
     }
 
-    destroyFruit(fruitInd) {
-        this.fruits.splice(fruitInd, 1)
+    frameUpdate() {
+        player.move()
+        this.isPlayerAlive()
+        this.didPlayerAteFruit()
+        this.grid.render(this.fruits, player.positions)
     }
 
     stopGame() {
-        clearInterval(refreshGame)
+        clearInterval(this.gameInterval)
     }
 
     endGame() {
-        clearInterval(refreshGame)
-    }
-
-    isPlayerAlive() {
-        let headPos = player.positions[0]
-        for(let i = 1; i < player.positions.length; i++) {
-            let pos = player.positions[i]
-            if(headPos.x === pos.x && headPos.y === pos.y) {
-                this.endGame()
-            }
-        }
-
-        if(
-            headPos.x < 0  ||
-            headPos.y < 0  ||
-            headPos.x > this.width-1 ||
-            headPos.y > this.height-1
-            ) {
-            this.endGame()
-        }
-    }
-
-    handleKeyPress({keyCode}) {
-        if(keyCode === 27) {
-            grid.stopGame()
-        }
-        if(!player.haveMoved) {
-            player.changeDirection(keyCode)
-        }
+        clearInterval(this.gameInterval)
     }
 
     didPlayerAteFruit() {
         this.fruits.forEach(( fruit = { }, ind) => {
             if(fruit.x === player.positions[0].x && fruit.y === player.positions[0].y) {
                 player.increaseSize()
+                console.log(fruit)
                 this.destroyFruit(ind)
                 this.createFruit()
             }
         })
     }
+
+    destroyFruit(fruitInd) {
+        this.fruits.splice(fruitInd, 1)
+    }
 }
 
-const grid = new Grid(gridWidth, gridHeight)
+const game = new Game()
 
-const refreshGame = setInterval(()=>{
-    try{
-        grid.frameUpdate()
-    } catch (err) {
-        console.log(err)
-    }
-    
-}, refreshRate)
 
-document.addEventListener('keydown', grid.handleKeyPress)
+document.addEventListener('keydown', game.handleKeyPress)
