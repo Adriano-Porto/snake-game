@@ -12,9 +12,9 @@ class Game {
         this.createFruit()
 
         this.grid = new Grid(this.width, this.height)
-            .setGridColors('rgb(255,0,0)', 'rgb(255,0,0)')
-            .setPlayerColor('blue')
-            .setFruitColor('rgb(241,0,0)')
+            .setGridColors('rgb(28,49,212)', 'rgb(55,78,250)')
+            .setPlayerColor('rgb(250, 62, 62)')
+            .setFruitColor('rgb(28, 212, 77)')
             .makeGrid()
 
         this.gameInterval = setInterval(() => {
