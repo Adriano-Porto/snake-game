@@ -11,6 +11,7 @@ class Player {
         this.alive = true
         this.haveMoved = false
         this.lastPos = { x: 8, y: 11 }
+        this.points = this.positions.length - 3
     }
 
     move() {
@@ -62,6 +63,7 @@ class Player {
 
     increaseSize() {
         this.positions.push(this.lastPos)
+        this.points++
     }
 }
 

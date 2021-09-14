@@ -10,6 +10,8 @@ class Game {
 
         this.fruits = []
         this.createFruit()
+        this.pointsBox = document.querySelector('.points')
+        this.updatePlayerPoints()
 
         this.grid = new Grid(this.width, this.height)
             .setGridColors('rgb(28,49,212)', 'rgb(55,78,250)')
@@ -100,6 +102,54 @@ class Game {
 
     endGame() {
         clearInterval(this.gameInterval)
+        this.createRetryDiv()
+    }
+
+    createRetryDiv() {
+        this.retryBoxWrapper = document.createElement('div')
+        this.retryBox = document.createElement('div')
+        this.restart = document.createElement('button')
+        this.gameWrapper = document.querySelector('.gameWrapper')
+
+        this.restart.setAttribute('class', 'restartButton')
+        this.restart.innerText = 'Restart'
+        this.restart.addEventListener('click', this.handleRestartClick)
+
+        this.retryBox.setAttribute('class', 'retryBox')
+        this.retryBox.appendChild(this.restart)
+
+        this.retryBoxWrapper.setAttribute('class', 'retryBoxWrapper')
+        this.retryBoxWrapper.appendChild(this.retryBox)
+
+        this.gameWrapper.appendChild(this.retryBoxWrapper)
+    }
+
+    restartGame() {
+        this.fruits = []
+        this.createFruit()
+
+        player.positions = [
+            { x: 8, y: 6 },
+            { x: 8, y: 7 },
+            { x: 8, y: 8 },
+        ]
+
+        player.points = 0
+
+
+        this.updatePlayerPoints()
+        this.gameInterval = setInterval(() => {
+            this.frameUpdate()
+        }, 200)
+    }
+
+    handleRestartClick() {
+        game.destroyRestartDiv()
+        game.restartGame()
+    }
+
+    destroyRestartDiv() {
+        this.retryBoxWrapper.remove()
     }
 
     didPlayerAteFruit() {
@@ -109,8 +159,13 @@ class Game {
                 console.log(fruit)
                 this.destroyFruit(ind)
                 this.createFruit()
+                this.updatePlayerPoints()
             }
         })
+    }
+    
+    updatePlayerPoints() {
+        this.pointsBox.innerText = `Points: ${String(player.points)}`
     }
 }
 
