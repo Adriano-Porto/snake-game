@@ -156,7 +156,6 @@ class Game {
         this.fruits.forEach(( fruit = { }, ind) => {
             if(fruit.x === player.positions[0].x && fruit.y === player.positions[0].y) {
                 player.increaseSize()
-                console.log(fruit)
                 this.destroyFruit(ind)
                 this.createFruit()
                 this.updatePlayerPoints()
