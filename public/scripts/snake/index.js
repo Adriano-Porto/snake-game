@@ -2,6 +2,33 @@ import player from './player.js'
 import Fruit from './fruit.js'
 import Grid from './grid.js'
 
+class RestartDiv {
+    constructor() {
+        this.retryBoxWrapper = document.createElement('div')
+        this.retryBox = document.createElement('div')
+        this.restart = document.createElement('button')
+        this.gameWrapper = document.querySelector('.gameWrapper')
+    }
+
+    create() {
+        this.restart.setAttribute('class', 'restartButton')
+        this.restart.innerText = 'Restart'
+        this.restart.addEventListener('click', game.handleRestartClick)
+
+        this.retryBox.setAttribute('class', 'retryBox')
+        this.retryBox.appendChild(this.restart)
+
+        this.retryBoxWrapper.setAttribute('class', 'retryBoxWrapper')
+        this.retryBoxWrapper.appendChild(this.retryBox)
+
+        this.gameWrapper.appendChild(this.retryBoxWrapper)
+    }
+
+    remove() {
+        this.retryBoxWrapper.remove()
+    }
+}
+
 class Game {
     constructor() {
         this.refreshRate = 200
@@ -22,6 +49,9 @@ class Game {
         this.gameInterval = setInterval(() => {
             this.frameUpdate()
         }, 200)
+
+        this.restartDiv = new RestartDiv()
+        this.gameRunning = true
     }
 
     frameUpdate() {
@@ -29,15 +59,6 @@ class Game {
         this.isPlayerAlive()
         this.didPlayerAteFruit()
         this.grid.render(this.fruits, player.positions)
-    }
-
-    handleKeyPress({keyCode}) {
-        if(keyCode === 27) {
-            this.stopGame()
-        }
-        if(!player.haveMoved) {
-            player.changeDirection(keyCode)
-        }
     }
 
     isPlayerAlive() {
@@ -96,32 +117,22 @@ class Game {
         this.fruits.splice(fruitInd, 1)
     }
 
+    toggleStartGame() {
+        if(this.gameRunning){
+            game.stopGame()
+        } else { 
+            game.restartGameInterval()
+        }
+        this.gameRunning = this.gameRunning ? false : true
+    }
+
     stopGame() {
         clearInterval(this.gameInterval)
     }
 
     endGame() {
         clearInterval(this.gameInterval)
-        this.createRetryDiv()
-    }
-
-    createRetryDiv() {
-        this.retryBoxWrapper = document.createElement('div')
-        this.retryBox = document.createElement('div')
-        this.restart = document.createElement('button')
-        this.gameWrapper = document.querySelector('.gameWrapper')
-
-        this.restart.setAttribute('class', 'restartButton')
-        this.restart.innerText = 'Restart'
-        this.restart.addEventListener('click', this.handleRestartClick)
-
-        this.retryBox.setAttribute('class', 'retryBox')
-        this.retryBox.appendChild(this.restart)
-
-        this.retryBoxWrapper.setAttribute('class', 'retryBoxWrapper')
-        this.retryBoxWrapper.appendChild(this.retryBox)
-
-        this.gameWrapper.appendChild(this.retryBoxWrapper)
+        this.restartDiv.create()
     }
 
     restartGame() {
@@ -138,18 +149,18 @@ class Game {
 
 
         this.updatePlayerPoints()
+        this.restartGameInterval()
+    }
+
+    restartGameInterval() {
         this.gameInterval = setInterval(() => {
             this.frameUpdate()
         }, 200)
     }
 
     handleRestartClick() {
-        game.destroyRestartDiv()
+        game.restartDiv.remove()
         game.restartGame()
-    }
-
-    destroyRestartDiv() {
-        this.retryBoxWrapper.remove()
     }
 
     didPlayerAteFruit() {
@@ -170,5 +181,13 @@ class Game {
 
 const game = new Game()
 
+document.addEventListener('keydown', handleKeyPress)
 
-document.addEventListener('keydown', game.handleKeyPress)
+function handleKeyPress({keyCode}) {
+    if(keyCode === 27) {
+        game.toggleStartGame()
+    }
+    if(!player.haveMoved) {
+        player.changeDirection(keyCode)
+    }
+}
