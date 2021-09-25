@@ -1,0 +1,85 @@
+.gameWrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 4rem;
+
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+
+    padding: 0.5rem 2rem 3rem 2rem;
+    margin-top: 1rem;
+    background-color: rgb(61, 61, 61);
+    border-radius: 0.5rem;
+    border: 2px solid rgb(34, 34, 34);
+}
+
+.title {
+    margin-bottom: 0.5rem;
+    font-size: 2rem;
+}
+
+.gridWrapper {
+    padding: 5px;
+    background: rgb(77, 77, 77);
+    border-radius: 0.6rem;
+}
+
+td {
+    height: 1.8rem;
+    width: 1.8rem;
+    padding: 1px;
+    background-color: blue;
+}
+
+.retryBoxWrapper {
+    width: 6rem;
+    height: 6rem;
+
+    position: absolute;
+    z-index: 9999;
+
+    
+}
+
+.retryBox {
+    height: 100%;
+    width: 100%;
+    padding: 0.5rem;
+
+    /* background-color: rgba(82, 87, 92); */
+    /* border: 1px solid rgb(92, 92, 92); */
+
+    display: flex;
+    flex-direction: column;
+}
+
+.restartButton {
+    border: none;
+    background-color: rgb(56, 55, 59);
+    font-size: 1.2rem;
+
+    border-radius: 15px;
+    height: 100%;
+}
+
+.restartButton:hover {
+    background-color: #838282;
+    color: black;
+}
+
+.restartButton:active {
+    background-color: rgb(189, 189, 189);
+    color: black;
+    transform: translateY(6px);
+  }
+.points {
+    position: absolute;
+    left: 70%;
+    top: 1rem;
+    text-align: center;
+    padding: 0 1.5rem;
+    font-size: 2rem;
+}

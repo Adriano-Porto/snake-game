@@ -7,7 +7,7 @@ class Player {
         ]
 
         this.color = 'rgb(200,20, 90)'
-        this.direction = 'up' //up left right down
+        this.direction = 'left' //up left right down
         this.alive = true
         this.haveMoved = false
         this.lastPos = { x: 8, y: 11 }

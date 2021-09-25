@@ -4,22 +4,18 @@ import Grid from './grid.js'
 
 class RestartDiv {
     constructor() {
-        this.retryBoxWrapper = document.createElement('div')
-        this.retryBox = document.createElement('div')
-        this.restart = document.createElement('button')
         this.gameWrapper = document.querySelector('.gameWrapper')
+        this.restartBoxTemplate = document.querySelector('.restartBoxTemplate').innerHTML
     }
 
     create() {
-        this.restart.setAttribute('class', 'restartButton')
-        this.restart.innerText = 'Restart'
-        this.restart.addEventListener('click', game.handleRestartClick)
-
-        this.retryBox.setAttribute('class', 'retryBox')
-        this.retryBox.appendChild(this.restart)
-
+        this.retryBoxWrapper = document.createElement('div')
         this.retryBoxWrapper.setAttribute('class', 'retryBoxWrapper')
-        this.retryBoxWrapper.appendChild(this.retryBox)
+        this.retryBoxWrapper.innerHTML = this.restartBoxTemplate
+
+        const retryButton = this.retryBoxWrapper.children[0].children[0]
+
+        retryButton.addEventListener('click', handleRestartClick)
 
         this.gameWrapper.appendChild(this.retryBoxWrapper)
     }
@@ -41,14 +37,14 @@ class Game {
         this.updatePlayerPoints()
 
         this.grid = new Grid(this.width, this.height)
-            .setGridColors('rgb(28,49,212)', 'rgb(55,78,250)')
+            .setGridColors('#70706e', '#525151')
             .setPlayerColor('rgb(250, 62, 62)')
             .setFruitColor('rgb(28, 212, 77)')
             .makeGrid()
 
         this.gameInterval = setInterval(() => {
             this.frameUpdate()
-        }, 200)
+        }, this.refreshRate)
 
         this.restartDiv = new RestartDiv()
         this.gameRunning = true
@@ -58,12 +54,12 @@ class Game {
         player.move()
         this.isPlayerAlive()
         this.didPlayerAteFruit()
-        this.grid.render(this.fruits, player.positions)
+            this.grid.render(this.fruits, player.positions) 
     }
 
     isPlayerAlive() {
         let headPos = player.positions[0]
-        for(let i = 1; i < player.positions.length; i++) {
+        for(let i = 2; i < player.positions.length; i++) {
             let pos = player.positions[i]
             if(headPos.x === pos.x && headPos.y === pos.y) {
                 this.endGame()
@@ -146,7 +142,7 @@ class Game {
         ]
 
         player.points = 0
-
+        player.direction = 'left'
 
         this.updatePlayerPoints()
         this.restartGameInterval()
@@ -155,12 +151,7 @@ class Game {
     restartGameInterval() {
         this.gameInterval = setInterval(() => {
             this.frameUpdate()
-        }, 200)
-    }
-
-    handleRestartClick() {
-        game.restartDiv.remove()
-        game.restartGame()
+        }, this.refreshRate)
     }
 
     didPlayerAteFruit() {
@@ -190,4 +181,12 @@ function handleKeyPress({keyCode}) {
     if(!player.haveMoved) {
         player.changeDirection(keyCode)
     }
+}
+
+function handleRestartClick() {
+    game.restartDiv.remove()
+    setTimeout(()=>{
+        
+        game.restartGame()
+    }, this.refreshRate)
 }

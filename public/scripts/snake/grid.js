@@ -74,7 +74,9 @@ class Grid {
 
         
         positions.forEach(({x, y})=>{
-            this.grid.rows[y].childNodes[x].style.backgroundColor = this.colorPlayer
+            if(this.grid.rows[y] !== undefined && this.grid.rows[y].childNodes[x] !== undefined) {
+                this.grid.rows[y].childNodes[x].style.backgroundColor = this.colorPlayer
+            }
         })
     }
 }

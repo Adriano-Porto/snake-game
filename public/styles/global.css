@@ -2,10 +2,15 @@
     box-sizing: border-box;
     padding: 0;
     margin: 0;
+
+    color: rgb(163, 163, 163);
+    font-family: Verdana;
 }
 
 body {
     width: 100vw;
     height: 100vh;
+
+    background-color: rgb(41, 41, 41);
 }
 
